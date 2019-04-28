@@ -29,7 +29,8 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = Gameplay)
 	float currentHealth;
 
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	bool isBlueTeam;
 
 protected:
 	// Called when the game starts or when spawned
