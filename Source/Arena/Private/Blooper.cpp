@@ -5,6 +5,7 @@
 #include "Runtime/Core/Public/Math/UnrealMathUtility.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Runtime/Engine/Classes/GameFramework/PawnMovementComponent.h"
+#include "Projectile.h"
 // Sets default values
 ABlooper::ABlooper()
 {
@@ -47,6 +48,30 @@ void ABlooper::Die()
 	{
 		GetMesh()->SetSimulatePhysics(true);
 		GetMesh()->AddForce(FVector::UpVector * 10000.0F * GetMesh()->GetMass());
+	}
+}
+
+void ABlooper::Shoot(FVector MuzzleLocation, FRotator MuzzleRotation, FVector LaunchDirection)
+{
+
+	// Attempt to fire a projectile.
+	if (ProjectileClass)
+	{
+		UWorld* World = GetWorld();
+		if (World)
+		{
+			FActorSpawnParameters SpawnParams;
+			SpawnParams.Owner = this;
+			SpawnParams.Instigator = Instigator;
+			// Spawn the projectile at the muzzle.
+			AProjectile* Proj = World->SpawnActor<AProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
+			if (Proj)
+			{
+				Proj->Owner = this;
+				// Set the projectile's initial trajectory.				
+				Proj->FireInDirection(LaunchDirection);
+			}
+		}
 	}
 }
 

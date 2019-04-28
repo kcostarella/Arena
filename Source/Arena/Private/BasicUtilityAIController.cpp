@@ -5,7 +5,7 @@
 #include "AIModule/Classes/Blueprint/AIBlueprintHelperLibrary.h"
 #include "Engine/World.h"
 #include "Blooper.h"
-
+#include "Components/SkeletalMeshComponent.h"
 
 void ABasicUtilityAIController::BeginPlay() {
 	Super::BeginPlay();
@@ -26,8 +26,15 @@ void ABasicUtilityAIController::Tick(float DeltaTime) {
 			UAIBlueprintHelperLibrary::SimpleMoveToLocation(this,ClosestFood->GetActorLocation());
 
 		}
-		else {
+		else 
+		{
 			UAIBlueprintHelperLibrary::SimpleMoveToActor(this, GetWorld()->GetFirstPlayerController()->GetPawn());
+		}
+
+		if (GetWorld()->GetRealTimeSeconds() > LastFire + FireRate)
+		{
+			//fire at the player
+			FireAtEnemyBlooper();
 		}
 	} 
 	else
@@ -42,6 +49,20 @@ void ABasicUtilityAIController::Tick(float DeltaTime) {
 void ABasicUtilityAIController::MoveToLocation(FVector position) {
 	UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, position);
 }
+
+void ABasicUtilityAIController::FireAtEnemyBlooper()
+{
+	ABlooper * closestBloop = GetClosestEnemyBlooper(); //could just be player
+
+										 // Transform MuzzleOffset from camera space to world space.
+	FVector MuzzleLocation = ControlledBlooper->GetMesh()->GetSocketLocation("headSocket");
+	FRotator MuzzleRotation = ControlledBlooper->GetMesh()->GetSocketRotation("headSocket");
+	MuzzleRotation.Pitch += 20.0f;
+	FVector Direction = (closestBloop->GetActorLocation() - MuzzleLocation).GetSafeNormal();
+	ControlledBlooper->Shoot(MuzzleLocation, MuzzleRotation, Direction);
+	LastFire = GetWorld()->GetRealTimeSeconds();
+}
+
 
 
 // TODO TEST
@@ -72,7 +93,7 @@ GetterType * ABasicUtilityAIController::GetClosest() const
 
 
 template<class Type>
-Type * ABasicUtilityAIController::GetNumberOf() const
+int ABasicUtilityAIController::GetNumberOf() const
 {
 	int c = 0;
 	for (TActorIterator<GetterType> ActorItr(GetWorld()); ActorItr; ++ActorItr) {

@@ -21,16 +21,8 @@ class ARENA_API ABasicUtilityAIController : public AAIController
 
 private:
 
-	void MoveToLocation(FVector position);
-
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
-	
-	AFood *GetClosestFood();
-
-	ABlooper * GetClosestEnemyBlooper();
-
-	ABlooper * ControlledBlooper;
 
 	template<class GetterType>
 	GetterType * GetClosest() const;
@@ -38,5 +30,19 @@ private:
 	template<class Type>
 	int GetNumberOf() const;
 
+	void MoveToLocation(FVector position);
+	
+	AFood *GetClosestFood();
+
+	ABlooper * GetClosestEnemyBlooper();
+
+	ABlooper * ControlledBlooper;
+	
+	float LastFire;
+
+	UPROPERTY(EditAnywhere)
+	float FireRate = 5.0F;
+
+	void FireAtEnemyBlooper();
 
 };

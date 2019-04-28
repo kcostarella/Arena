@@ -21,13 +21,20 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	float maxHealth;
 
-
+	/** Shoot offset from my position */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	FVector ShootOffset;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	float healRate;
 
-	UPROPERTY(VisibleAnywhere, Category = Gameplay)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Gameplay)
 	float currentHealth;
+
+
+	/** Projectile class to spawn. */
+	UPROPERTY(EditDefaultsOnly, Category = Projectile)
+	TSubclassOf<class AProjectile> ProjectileClass;
 
 
 
@@ -47,10 +54,7 @@ public:
 	void AffectHealth(float amount);
 
 	void Die();
-	
 
-
-
-
+	void Shoot(FVector MuzzleLocation, FRotator MuzzleRotation, FVector LaunchDirection);
 
 };

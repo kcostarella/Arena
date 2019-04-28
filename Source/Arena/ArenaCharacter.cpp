@@ -10,6 +10,9 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Engine/Engine.h"
+#include "Blooper.h"
+#include "Engine/World.h"
+
 
 //////////////////////////////////////////////////////////////////////////
 // AArenaCharacter
@@ -48,6 +51,20 @@ AArenaCharacter::AArenaCharacter()
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 }
+
+void AArenaCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+	if (GetWorld()->GetFirstPlayerController())
+	{
+		ControlledBlooper = Cast<ABlooper>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	}
+	if (!ControlledBlooper)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No Controlled Blooper for this guy"));
+	}
+}
+
 
 //////////////////////////////////////////////////////////////////////////
 // Input
@@ -145,34 +162,16 @@ void AArenaCharacter::Shoot()
 		GEngine->AddOnScreenDebugMessage(-1, .5f, FColor::Red, TEXT("Shooty shoot"));
 	}
 
-	// Attempt to fire a projectile.
-	if (ProjectileClass)
-	{
-		// Get the camera transform.
-		FVector CameraLocation;
-		FRotator CameraRotation;
-		GetActorEyesViewPoint(CameraLocation, CameraRotation);
+	// Get the camera transform.
+	FVector CameraLocation;
+	FRotator CameraRotation;
+	GetActorEyesViewPoint(CameraLocation, CameraRotation);
 
-		// Transform MuzzleOffset from camera space to world space.
-		FVector MuzzleLocation = CameraLocation + ShootOffset;
-		FRotator MuzzleRotation = CameraRotation;
-		// Skew the aim to be slightly upwards.
-		MuzzleRotation.Pitch += 20.0f;
-		UWorld* World = GetWorld();
-		if (World)
-		{
-			FActorSpawnParameters SpawnParams;
-			SpawnParams.Owner = this;
-			SpawnParams.Instigator = Instigator;
-			// Spawn the projectile at the muzzle.
-			AProjectile* Proj = World->SpawnActor<AProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
-			if (Proj)
-			{
-				Proj->Owner = this;
-				// Set the projectile's initial trajectory.
-				FVector LaunchDirection = MuzzleRotation.Vector();
-				Proj->FireInDirection(LaunchDirection);
-			}
-		}
-	}
+	// Transform MuzzleOffset from camera space to world space.
+	FVector MuzzleLocation = CameraLocation + ShootOffset;
+	FRotator MuzzleRotation = CameraRotation;
+	MuzzleRotation.Pitch += 20.0f;
+	ControlledBlooper->Shoot(MuzzleLocation, MuzzleRotation, MuzzleRotation.Vector());
+		
+	
 }

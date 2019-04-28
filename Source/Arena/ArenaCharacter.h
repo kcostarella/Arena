@@ -7,6 +7,7 @@
 #include "Public/Blooper.h"
 #include "ArenaCharacter.generated.h"
 
+
 UCLASS(config=Game)
 class AArenaCharacter : public ABlooper
 {
@@ -20,14 +21,6 @@ public:
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
-
-	/** Shoot offset from my position */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-	FVector ShootOffset;
-
-	/** Projectile class to spawn. */
-	UPROPERTY(EditDefaultsOnly, Category = Projectile)
-	TSubclassOf<class AProjectile> ProjectileClass;
 
 public:
 	AArenaCharacter();
@@ -77,6 +70,11 @@ protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// End of APawn interface
+
+
+	ABlooper * ControlledBlooper;
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 
 public:
 	/** Returns CameraBoom subobject **/
