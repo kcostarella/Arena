@@ -36,4 +36,9 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = Movement)
 	UProjectileMovementComponent* ProjectileMovementComponent;
 
+	AActor * Owner;
+
+	UFUNCTION(BlueprintCallable)
+	void OnHit(AActor * Actor);
+
 };

@@ -46,3 +46,12 @@ void AProjectile::FireInDirection(const FVector& ShootDirection)
 	ProjectileMovementComponent->Velocity = ShootDirection * ProjectileMovementComponent->InitialSpeed;
 }
 
+void AProjectile::OnHit(AActor * Actor)
+{
+	if (Actor && Actor != Owner) 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("On Hit happened with %s"), *Actor->GetName());
+		Destroy();
+	}
+}
+

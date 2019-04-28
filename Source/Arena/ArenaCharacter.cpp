@@ -168,6 +168,7 @@ void AArenaCharacter::Shoot()
 			AProjectile* Proj = World->SpawnActor<AProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
 			if (Proj)
 			{
+				Proj->Owner = this;
 				// Set the projectile's initial trajectory.
 				FVector LaunchDirection = MuzzleRotation.Vector();
 				Proj->FireInDirection(LaunchDirection);
