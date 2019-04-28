@@ -25,6 +25,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Gameplay)
 	float currentHealth;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	float healRate;
+
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

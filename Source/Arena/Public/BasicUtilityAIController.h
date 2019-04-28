@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
+#include "Food.h"
 #include "BasicUtilityAIController.generated.h"
 
 
@@ -23,4 +24,5 @@ private:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	
+	AFood *GetClosestFood();
 };
