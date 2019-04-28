@@ -15,15 +15,13 @@ public:
 	// Sets default values for this character's properties
 	ABlooper();
 
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	float startHealth;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	float maxHealth;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Gameplay)
-	float currentHealth;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	float healRate;
@@ -41,5 +39,11 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	void MoveToLocation(FVector position);
+
+	void AffectHealth(float amount);
+
+private:
+	UPROPERTY(VisibleAnywhere, Category = Gameplay)
+	float currentHealth;
 
 };

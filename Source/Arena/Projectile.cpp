@@ -2,7 +2,7 @@
 
 
 #include "Projectile.h"
-
+#include "Public/Blooper.h"
 // Sets default values
 AProjectile::AProjectile()
 {
@@ -48,9 +48,21 @@ void AProjectile::FireInDirection(const FVector& ShootDirection)
 
 void AProjectile::OnHit(AActor * Actor)
 {
-	if (Actor && Actor != Owner) 
+	if (Actor == Owner || !Owner)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("On Hit happened with %s"), *Actor->GetName());
+		UE_LOG(LogTemp, Warning, TEXT("Actor is owner, or owner not set, returning early"));
+		return;
+	}
+
+	ABlooper * BlooperActor = Cast<ABlooper>(Actor);
+	if (BlooperActor)
+	{
+		BlooperActor->AffectHealth(-10.0F);
+	}
+
+	if (Actor && Owner)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("On Hit happened with %s, owner name %s"), *Actor->GetName(), *Owner->GetName());
 		Destroy();
 	}
 }

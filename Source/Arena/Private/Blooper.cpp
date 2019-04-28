@@ -2,6 +2,7 @@
 
 
 #include "Blooper.h"
+#include "Runtime/Core/Public/Math/UnrealMathUtility.h"
 
 // Sets default values
 ABlooper::ABlooper()
@@ -32,5 +33,10 @@ void ABlooper::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void ABlooper::AffectHealth(float amount)
+{
+	currentHealth = FMath::Min(currentHealth + amount, maxHealth);
 }
 
