@@ -4,15 +4,29 @@
 #include "EngineUtils.h"
 #include "AIModule/Classes/Blueprint/AIBlueprintHelperLibrary.h"
 #include "Engine/World.h"
+#include "Blooper.h"
 
 
 void ABasicUtilityAIController::BeginPlay() {
 	Super::BeginPlay();
+	ControlledBlooper = Cast<ABlooper>(GetPawn());
+	if (!ControlledBlooper)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No Controlled Blooper for this guy"));
+	}
 }
 void ABasicUtilityAIController::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 	//MoveToLocation(GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation());
-	UAIBlueprintHelperLibrary::SimpleMoveToActor(this, GetWorld()->GetFirstPlayerController()->GetPawn());
+	if (ControlledBlooper->currentHealth > 0)
+	{
+		UAIBlueprintHelperLibrary::SimpleMoveToActor(this, GetWorld()->GetFirstPlayerController()->GetPawn());
+	} 
+	else
+	{
+		StopMovement();
+		ControlledBlooper->Die();
+	}
 
 }
 
