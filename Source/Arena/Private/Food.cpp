@@ -34,6 +34,7 @@ void AFood::OnPickup(AActor * CollisionActor)
 	if (BlooperActor)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Blooper hit, going away!"));
+		BlooperActor->AffectHealth(10.0F);
 		Destroy();
 	}
 }
