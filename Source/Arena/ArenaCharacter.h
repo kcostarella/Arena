@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Public/Blooper.h"
 #include "ArenaCharacter.generated.h"
 
 UCLASS(config=Game)
-class AArenaCharacter : public ACharacter
+class AArenaCharacter : public ABlooper
 {
 	GENERATED_BODY()
 
