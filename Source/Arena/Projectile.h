@@ -4,9 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Projectile.generated.h"
+
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+
+#include "Projectile.generated.h"
 
 UCLASS()
 class ARENA_API AProjectile : public AActor

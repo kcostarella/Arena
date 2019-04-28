@@ -1,6 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
 #include "ArenaCharacter.h"
+#include "Projectile.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -8,6 +9,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Engine/Engine.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AArenaCharacter
@@ -67,6 +69,8 @@ void AArenaCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInp
 	PlayerInputComponent->BindAxis("TurnRate", this, &AArenaCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AArenaCharacter::LookUpAtRate);
+
+	PlayerInputComponent->BindAction("Shoot", IE_Pressed, this, &AArenaCharacter::Shoot);
 
 	// handle touch devices
 	PlayerInputComponent->BindTouch(IE_Pressed, this, &AArenaCharacter::TouchStarted);
@@ -130,5 +134,44 @@ void AArenaCharacter::MoveRight(float Value)
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		// add movement in that direction
 		AddMovementInput(Direction, Value);
+	}
+}
+
+void AArenaCharacter::Shoot()
+{
+	if (GEngine)
+	{
+		// Put up a debug message for five seconds. The -1 "Key" value (first argument) indicates that we will never need to update or refresh this message.
+		GEngine->AddOnScreenDebugMessage(-1, .5f, FColor::Red, TEXT("Shooty shoot"));
+	}
+
+	// Attempt to fire a projectile.
+	if (ProjectileClass)
+	{
+		// Get the camera transform.
+		FVector CameraLocation;
+		FRotator CameraRotation;
+		GetActorEyesViewPoint(CameraLocation, CameraRotation);
+
+		// Transform MuzzleOffset from camera space to world space.
+		FVector MuzzleLocation = CameraLocation + ShootOffset;
+		FRotator MuzzleRotation = CameraRotation;
+		// Skew the aim to be slightly upwards.
+		MuzzleRotation.Pitch += 20.0f;
+		UWorld* World = GetWorld();
+		if (World)
+		{
+			FActorSpawnParameters SpawnParams;
+			SpawnParams.Owner = this;
+			SpawnParams.Instigator = Instigator;
+			// Spawn the projectile at the muzzle.
+			AProjectile* Proj = World->SpawnActor<AProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
+			if (Proj)
+			{
+				// Set the projectile's initial trajectory.
+				FVector LaunchDirection = MuzzleRotation.Vector();
+				Proj->FireInDirection(LaunchDirection);
+			}
+		}
 	}
 }

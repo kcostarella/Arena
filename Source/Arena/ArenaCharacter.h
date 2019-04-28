@@ -11,6 +11,7 @@ class AArenaCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
+public:
 	/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
@@ -18,6 +19,15 @@ class AArenaCharacter : public ACharacter
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
+
+	/** Shoot offset from my position */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	FVector ShootOffset;
+
+	/** Projectile class to spawn. */
+	UPROPERTY(EditDefaultsOnly, Category = Projectile)
+	TSubclassOf<class AProjectile> ProjectileClass;
+
 public:
 	AArenaCharacter();
 
@@ -39,6 +49,10 @@ protected:
 
 	/** Called for side to side input */
 	void MoveRight(float Value);
+
+	/** Shoot...the gun */
+	UFUNCTION()
+	void Shoot();
 
 	/** 
 	 * Called via input to turn at a given rate. 
