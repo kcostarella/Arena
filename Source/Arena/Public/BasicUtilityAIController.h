@@ -28,6 +28,15 @@ private:
 	
 	AFood *GetClosestFood();
 
+	ABlooper * GetClosestEnemyBlooper();
+
 	ABlooper * ControlledBlooper;
+
+	template<class GetterType>
+	GetterType * GetClosest() const;
+
+	template<class Type>
+	int GetNumberOf() const;
+
 
 };

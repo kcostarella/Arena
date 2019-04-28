@@ -20,7 +20,15 @@ void ABasicUtilityAIController::Tick(float DeltaTime) {
 	//MoveToLocation(GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation());
 	if (ControlledBlooper->currentHealth > 0)
 	{
-		UAIBlueprintHelperLibrary::SimpleMoveToActor(this, GetWorld()->GetFirstPlayerController()->GetPawn());
+		AFood * ClosestFood = GetClosestFood();
+		if (ControlledBlooper->currentHealth < 50 && ClosestFood)
+		{
+			UAIBlueprintHelperLibrary::SimpleMoveToLocation(this,ClosestFood->GetActorLocation());
+
+		}
+		else {
+			UAIBlueprintHelperLibrary::SimpleMoveToActor(this, GetWorld()->GetFirstPlayerController()->GetPawn());
+		}
 	} 
 	else
 	{
@@ -38,15 +46,40 @@ void ABasicUtilityAIController::MoveToLocation(FVector position) {
 
 // TODO TEST
 AFood *ABasicUtilityAIController::GetClosestFood() {
-	AFood *result = nullptr;
+	return GetClosest<AFood>();
+}
+
+ABlooper * ABasicUtilityAIController::GetClosestEnemyBlooper()
+{
+	return GetClosest<ABlooper>();
+}
+
+template<class GetterType>
+GetterType * ABasicUtilityAIController::GetClosest() const
+{
+	GetterType *result = nullptr;
 	float distance = 100000;
-	for (TActorIterator<AFood> ActorItr(GetWorld()); ActorItr; ++ActorItr) {
-		AFood *food = *ActorItr;
-		float dist = (food->GetActorLocation() - GetPawn()->GetActorLocation()).Size();
+	for (TActorIterator<GetterType> ActorItr(GetWorld()); ActorItr; ++ActorItr) {
+		GetterType *t = *ActorItr;
+		float dist = (t->GetActorLocation() - GetPawn()->GetActorLocation()).Size();
 		if (result == nullptr || dist < distance) {
 			distance = dist;
-			result = food;
+			result = t;
 		}
 	}
 	return result;
 }
+
+
+template<class Type>
+Type * ABasicUtilityAIController::GetNumberOf() const
+{
+	int c = 0;
+	for (TActorIterator<GetterType> ActorItr(GetWorld()); ActorItr; ++ActorItr) {
+		c++; //lol
+	}
+	return c;
+	
+}
+
+
