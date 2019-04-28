@@ -23,6 +23,10 @@ public:
 
 
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	float healRate;
+
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
