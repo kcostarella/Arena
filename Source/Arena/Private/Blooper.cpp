@@ -15,7 +15,8 @@ ABlooper::ABlooper()
 void ABlooper::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	currentHealth = maxHealth;
 }
 
 // Called every frame
@@ -23,6 +24,7 @@ void ABlooper::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	currentHealth -= .01;
 }
 
 // Called to bind functionality to input

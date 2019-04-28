@@ -15,6 +15,16 @@ public:
 	// Sets default values for this character's properties
 	ABlooper();
 
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	float startHealth;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	float maxHealth;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Gameplay)
+	float currentHealth;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
