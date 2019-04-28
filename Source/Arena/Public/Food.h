@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Runtime/Engine/Classes/Components/StaticMeshComponent.h"
 #include "Food.generated.h"
 
 
@@ -28,5 +29,10 @@ private:
 	
 	UFUNCTION(BlueprintCallable)
 	void OnPickup(AActor * OtherActor);
+
+	// Sphere collision component.
+	UPROPERTY(VisibleDefaultsOnly, Category = Projectile)
+	UStaticMeshComponent* MeshComponent;
+
 
 };
