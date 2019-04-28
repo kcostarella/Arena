@@ -3,7 +3,8 @@
 
 #include "Blooper.h"
 #include "Runtime/Core/Public/Math/UnrealMathUtility.h"
-
+#include "Components/SkeletalMeshComponent.h"
+#include "Runtime/Engine/Classes/GameFramework/PawnMovementComponent.h"
 // Sets default values
 ABlooper::ABlooper()
 {
@@ -38,5 +39,14 @@ void ABlooper::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void ABlooper::AffectHealth(float amount)
 {
 	currentHealth = FMath::Min(currentHealth + amount, maxHealth);
+}
+
+void ABlooper::Die()
+{
+	if (!GetMesh()->BodyInstance.bSimulatePhysics)
+	{
+		GetMesh()->SetSimulatePhysics(true);
+		GetMesh()->AddForce(FVector::UpVector * 10000.0F * GetMesh()->GetMass());
+	}
 }
 

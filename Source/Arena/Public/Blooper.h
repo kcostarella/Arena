@@ -26,6 +26,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	float healRate;
 
+	UPROPERTY(VisibleAnywhere, Category = Gameplay)
+	float currentHealth;
+
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -42,8 +46,11 @@ public:
 
 	void AffectHealth(float amount);
 
-private:
-	UPROPERTY(VisibleAnywhere, Category = Gameplay)
-	float currentHealth;
+	void Die();
+	
+
+
+
+
 
 };

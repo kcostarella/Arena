@@ -7,6 +7,8 @@
 #include "Food.h"
 #include "BasicUtilityAIController.generated.h"
 
+class ABlooper;
+
 
 /**
  * 
@@ -25,4 +27,7 @@ private:
 	virtual void Tick(float DeltaTime) override;
 	
 	AFood *GetClosestFood();
+
+	ABlooper * ControlledBlooper;
+
 };
