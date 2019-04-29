@@ -4,6 +4,7 @@
 #include "Blooper.h"
 #include "Runtime/Core/Public/Math/UnrealMathUtility.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Materials/MaterialInstanceDynamic.h"
 #include "Runtime/Engine/Classes/GameFramework/PawnMovementComponent.h"
 #include "Projectile.h"
 // Sets default values
@@ -20,6 +21,15 @@ void ABlooper::BeginPlay()
 	Super::BeginPlay();
 
 	currentHealth = startHealth;
+
+	UMaterialInstanceDynamic * DynMat = GetMesh()->CreateDynamicMaterialInstance(0, GetMesh()->GetMaterials()[0]);
+	if (DynMat && !isBlueTeam) {
+		DynMat->SetVectorParameterValue("BodyColor", FLinearColor(1, .5, 0, 1));
+		UE_LOG(LogTemp, Warning, TEXT("Setting bodycolor"));
+	}
+	else {
+		UE_LOG(LogTemp, Warning, TEXT("not setting body colr"));
+	}
 }
 
 // Called every frame
